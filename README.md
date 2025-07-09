@@ -12,9 +12,12 @@ git clone https://github.com/Croki555/hotellink.git ~/Desktop/hotellink
 ```bash
 docker-compose up -d
 ```
-
-4. **Инициализация базы данных**  
-В новом терминале выполнить:
+4. **Установка зависимостей**
+```bash
+docker-compose exec hotellink composer install 
+```
+   
+5. **Инициализация базы данных**  
 ```bash
 docker-compose exec hotellink php artisan migrate:fresh --seed
 ```
