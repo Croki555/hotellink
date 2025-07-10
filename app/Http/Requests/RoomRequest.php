@@ -23,14 +23,12 @@ class RoomRequest extends FormRequest
     {
         return [
             'start_date' => [
-                'nullable',
+                'required',
                 'date_format:Y-m-d',
-                'required_with:end_date',
             ],
             'end_date' => [
-                'nullable',
+                'required',
                 'date_format:Y-m-d',
-                'required_with:start_date',
                 'after:start_date',
                 function ($attribute, $value, $fail) {
                     $startDate = $this->input('start_date');

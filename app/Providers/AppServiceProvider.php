@@ -2,9 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Booking;
-use App\Observers\BookingObserver;
-use Carbon\Carbon;
+use App\Services\Booking\BookingService;
+use App\Services\Booking\BookingServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(BookingServiceInterface::class, BookingService::class);
     }
 
     /**
@@ -22,6 +21,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Booking::observe(BookingObserver::class);
+        //
     }
 }

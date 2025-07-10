@@ -2,7 +2,7 @@
 1. **Клонировать репозиторий**
 
 ```bash
-git clone https://github.com/Croki555/hotellink.git ~/Desktop/hotellink
+git clone https://github.com/Croki555/hotellink.git
 ```
 
 2. **Настройка переменных окружения**  
@@ -24,15 +24,16 @@ docker-compose exec hotellink php artisan migrate:fresh --seed
 
 ## API Endpoints
 
-### Получение списка комнат
-- **Все комнаты**  
-`GET` `http://localhost:80/api/rooms`
+### Просмотр доступных номеров на период
+- **start_date** - обязательно
+- **end_date** - обязательно
+- опционально добавлена пагинация (per_page, page)
 
-- **Доступные комнаты на период (пример)**  
 `GET` `http://localhost:80/api/rooms?start_date=2025-07-10&end_date=2025-07-13`
 
-### Бронирование
+### Просмотр список броней (заселены, не заселены, выезд)
 `POST` `http://localhost:80/api/booking`
+
 
 **Пример запроса:**
 ```json
@@ -40,14 +41,9 @@ docker-compose exec hotellink php artisan migrate:fresh --seed
   "client_id": 5,
   "room_number": 111,
   "check_in": "2025-07-12 20:35",
-  "check_out": "2025-07-12 19:35"
+  "check_out": "2025-07-12 19:35", 
+  "status": "not_occupied"
 }
+// Доступные статусы: occupied, not_occupied, check_out 
 ```
 
-## Важные условия бронирования
-- Требуется указать `client_id` (так как нет системы авторизации)
-- Минимальное время брони - 6 часов
-- Бронировать можно не позднее чем за 1 час до заезда
-
-## Статусы
-2 статуса Забронировано и Свободно, в дальнейшем можно и больше добавить + будет больше функционала

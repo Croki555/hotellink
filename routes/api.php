@@ -19,3 +19,4 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/rooms', RoomController::class)->name('rooms');
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
+Route::get('/booking', [BookingController::class, 'index'])->name('booking.index');

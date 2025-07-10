@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\BookingStatus;
 use App\Models\Booking;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Carbon;
@@ -51,7 +52,7 @@ class BookingRequest extends FormRequest
                 'after:check_in',
                 function ($attribute, $value, $fail) {
                     $timezone = config('app.timezone');
-                    $minHours = 6;
+                    $minHours = Booking::MIN_HOURS;
                     $start = Carbon::parse(request('check_in'), $timezone);
                     $end = Carbon::parse($value, $timezone);
 
@@ -60,6 +61,22 @@ class BookingRequest extends FormRequest
                     }
                 },
             ],
+            'status' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) {
+                    $upperValue = strtoupper($value);
+
+                    if (!in_array($upperValue, array_column(BookingStatus::cases(), 'value'))) {
+                        $availableStatuses = array_map(
+                            fn(BookingStatus $status) => strtolower($status->value),
+                            BookingStatus::cases()
+                        );
+
+                        $fail("Недопустимый статус. Доступные статусы: " . implode(', ', $availableStatuses));
+                    }
+                },
+            ]
         ];
     }
 

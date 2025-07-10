@@ -10,8 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Room extends Model
 {
     use HasFactory;
-
-    public $timestamps = false;
     protected $fillable = [
         'room_number',
         'price_for_night',

@@ -2,7 +2,6 @@
 
 use App\Models\Client;
 use App\Models\Room;
-use App\Models\Status;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,7 +20,8 @@ return new class extends Migration
             $table->float('total_price')->nullable();
             $table->timestamp('check_in');
             $table->timestamp('check_out');
-            $table->foreignIdFor(Status::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('status');
+            $table->timestamps();
         });
     }
 

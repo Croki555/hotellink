@@ -13,16 +13,12 @@ class RoomController extends Controller
 {
     public function __invoke(RoomRequest $request): JsonResponse
     {
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
+        $start = Carbon::parse($request->input('start_date'));
+        $end = Carbon::parse($request->input('end_date'));
+        $perPage = $request->input('per_page', 10);
 
-        $query = Room::with(['status', 'bookings']);
-
-        if ($startDate && $endDate) {
-            $start = Carbon::parse($startDate);
-            $end = Carbon::parse($endDate);
-
-            $query->whereDoesntHave('bookings', function($q) use ($start, $end) {
+        $rooms = Room::doesntHave('bookings')
+            ->orWhereHas('bookings', function($q) use ($start, $end) {
                 $q->where(function($query) use ($start, $end) {
                     $query->whereBetween('check_in', [$start, $end])
                         ->orWhereBetween('check_out', [$start, $end])
@@ -31,14 +27,27 @@ class RoomController extends Controller
                                 ->where('check_out', '>=', $end);
                         });
                 });
-            });
-        }
+            }, '=', 0)
+            ->orderBy('room_number', 'asc')
+            ->paginate($perPage);
 
-        $rooms = $query->get();
+        $rooms->appends($request->query());
 
         return response()->json([
-            'message' => $startDate && $endDate ? 'Список свободных комнат' : 'Список всех комнат',
+            'message' => 'Список доступных комнат за указанный период',
             'data' => RoomResource::collection($rooms),
+            'meta' => [
+                'current_page' => $rooms->currentPage(),
+                'last_page' => $rooms->lastPage(),
+                'per_page' => $rooms->perPage(),
+                'total' => $rooms->total(),
+            ],
+            'links' => [
+                'first' => $rooms->url(1),
+                'last' => $rooms->url($rooms->lastPage()),
+                'prev' => $rooms->previousPageUrl(),
+                'next' => $rooms->nextPageUrl(),
+            ],
         ], Response::HTTP_OK);
     }
 }
