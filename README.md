@@ -31,7 +31,7 @@ docker-compose exec hotellink php artisan migrate:fresh --seed
 
 `GET` `http://localhost:80/api/rooms?start_date=2025-07-10&end_date=2025-07-13`
 
-### Просмотр список броней (заселены, не заселены, выезд)
+### Постановка брони
 `POST` `http://localhost:80/api/booking`
 
 
@@ -46,4 +46,7 @@ docker-compose exec hotellink php artisan migrate:fresh --seed
 }
 // Доступные статусы: occupied, not_occupied, check_out 
 ```
+
+### Просмотр список броней (заселены, не заселены, выезд)
+`GET` `http://localhost:80/api/booking`
 
